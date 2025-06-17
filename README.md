@@ -384,7 +384,7 @@ The **RFM Dashboard** designed for marketing and strategy teams, this dashboard 
 
 | Sales Dashboard | RFM Dashboard |
 |-----------------|---------------|
-| ![Main](assets/images/Public Dashboard Sales.png) | ![RFM](assets/images/Public Dashboard RFM.png) |
+| ![Main](assets/images/Public-Dashboard-Sales.png) | ![RFM](assets/images/Public-Dashboard-RFM.png) |
 
 ---
 
