@@ -345,9 +345,9 @@ plt.show()
 ##### Looks like Thursday is the big winner when it comes to sales, bringing in around 1.98 million euros, with Tuesday not far behind at 1.7 million euros. These are clearly the busiest days for the public store, so it’s a good idea to keep shelves fully stocked and make sure there’s enough staff to handle the rush. On the flip side, Sunday stands out for the wrong reason — sales drop to about 792,000 euros, which is much lower than the rest of the week. To turn that around, it might help to run special Sunday-only deals, flash discounts, or promote weekend bundles to bring more people in. Even small events or giveaways could make Sundays more attractive for shoppers. By making the most of the strong days and giving a boost to the slower ones, the store can keep things balanced and grow total sales over time.
 
 
-## 📈 Sales & RFM Dashboards
+## 📈 Main & RFM Dashboards
 
-The **Sales Dashboard** offers a deep dive into Public store Sales.
+The **Main Dashboard** offers a deep dive into Public store Sales.
 
 ### Key Features
 
@@ -382,7 +382,7 @@ The **RFM Dashboard** designed for marketing and strategy teams, this dashboard 
 
 ## 🖼️ Screenshots
 
-| Sales Dashboard | RFM Dashboard |
+| Main Dashboard | RFM Dashboard |
 |-----------------|---------------|
 | ![Main](assets/images/Public-Dashboard-Sales.png) | ![RFM](assets/images/Public-Dashboard-RFM.png) |
 
