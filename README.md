@@ -193,7 +193,9 @@ plt.show()
 kmeans = KMeans(n_clusters=4, random_state=42)
 rfm['Cluster'] = kmeans.fit_predict(rfm_scaled)
 ```
-
+-- The script result is: --
+![Elbow method](assets/python_insights_images/Elbow-method.png)
+##### As you can see the image in 4 we have the elbow effect and this is the reason i choose the number 4 as the number of clusters
 
 
 
