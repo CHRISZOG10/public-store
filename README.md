@@ -1,5 +1,5 @@
 # Project Public Store
-✌🏻💯
+🎯💥
 
 This project simulates a real-word sales analysis for **Public**, a major Greek retail chain, using real-word data from the [Online Retail II dataset](https://www.kaggle.com/datasets). The goal is to demonstrate end-to-end data analytics skills using **Python (via PyCharm)** for data preperation and **Power BI** for business-oriented visual insights.  
 
@@ -39,7 +39,7 @@ Simulate a real-world retail analytics scenario using historical sales data that
 
 ## 🛠 Tech Stack
  
-- **Python (via PyCharm)** – Data cleaning & analyze the trends  
+- **Python (via PyCharm)** – Data cleaning & analyze the trends with libraries like pandas, datetime, re, sklearn, matplotlib and seaborn
 - **Power BI** – Interactive visual dashboards  
 - **GitHub** – Version control & collaboration  
 
@@ -367,25 +367,24 @@ The **RFM Dashboard** designed for marketing and strategy teams, this dashboard 
 - 📆 **Customer Table:** RFM & Clustering   
 - 📊 **RFM** Scatterplots  
 
-### [To view the Public Project Dashboard follow this path](https://github.com/CHRISZOG10/public-store/blob/main/assets/Public%20store%20Dashboard/Public%20Project%20Dashboard.pbix)
+[View the Public Project Dashboard](https://github.com/CHRISZOG10/public-store/blob/main/assets/Public%20store%20Dashboard/Public%20Project%20Dashboard.pbix)
 
 ---
 
 ## 🧭 Interactivity & Filters
 
-- 📌 **Dynamic Year Selector**
-- 🔝 **Top Customers Selector** 
-- 📍 **Filters by Region, State**  
-- 🛍️ **Filters by Category, Payment Method**  
+- 📌 **Customer ID**
+- 🔝 **Country** 
+- 📍 **Clusters**    
 - 📈 **Clickable Visuals** – Drill into segments directly from charts  
 
 ---
 
 ## 🖼️ Screenshots
 
-| Mockup Dashboard | Sales Dashboard | Customer Dashboard |
-|------------------|-----------------|--------------------|
-| ![Mockup](assets/images/USA-STORES-MOCKUP.png)| ![Sales](assets/images/USA-STORES-SALES.png) | ![Customer](assets/images/USA-STORES-CUSTOMERS.png) |
+| Sales Dashboard | RFM Dashboard |
+|-----------------|---------------|
+| ![Main](assets/images/Public Dashboard Sales.png) | ![RFM](assets/images/Public Dashboard RFM.png) |
 
 ---
 
@@ -393,28 +392,20 @@ The **RFM Dashboard** designed for marketing and strategy teams, this dashboard 
 
 Based on the insights derived from the dashboards, the following recommendations are suggested to enhance business performance:
 
-1. Peak sales Month
-   According to the tableau sales dashboard the month with the highest sales is January for the most years.
-   So this indicates a strong trend and the companies should increase the inventory and launching promotions.
+1. Double Down on High Performers:
+Products like Regency Cakestand 3 Tier and White Hanging Heart T-Light Holder are generating the highest revenue. These items should be prioritized for promotions, bundled offers, and restocking strategies—especially during peak sales seasons.
 
-2. Investigate under performing Time periods
-   The lowest sales performance occured in August in most years and February.
-   Maybe this months is the months that the discounts is over and the people don't buy many products.
-   It's reccomending that the companies may have a new marketing proposal for these months.
+2. Capitalize on Strong Growth from 2010 to 2011:
+Revenue jumped from $552K in 2010 to over $7.7M in 2011, showing massive growth. It’s worth analyzing what drove that spike (e.g., product expansion, marketing campaigns, or market entries) and replicating similar strategies going forward.
 
-3. High/Low Profit Category
-   The categories with thw highest profits over the years are the food and computer and electrics.
-   This means that the USA companies should look to increase the items of those categories and start to sell more and more.
-   The categories with the lowest profits over the years are the butchers and the patisseries.
-   The USA companies have two options, the first is to discard this categories from the supermarkets and the other is to create a stratigic campaign for that category items to increase the customers
+3. Expand Presence Beyond the UK:
+The UK dominates revenue by country. To reduce dependency on a single market, consider tailored marketing campaigns or partnerships in underperforming regions like the Netherlands, Germany, and Austria. Even small gains in these areas could drive significant overall growth.
 
-4. Improve Weekly Sales Consistency
-   Weekly trend analysis shows major fluctuations, with 23 weeks being below average in 2024.
-   Investigating these dips can help stabilize cash flow and avoid missed sales opportunities.
+4. Re-Engage High-Value, Less Frequent Customers:
+Some customers in Cluster 2 have high monetary value but relatively low frequency. These are likely big spenders who shop infrequently. Consider targeted re-engagement campaigns, like personalized email offers or loyalty perks, to encourage them to shop more often without losing that high basket size.
 
-5. Reward and Retain Top Customers
-   The top 5 customers contributed to almost 3M of total profits. Retaining these VIP clients through exclusive perks or dedicated account management could further boost lifetime value.
-   ![Top 5 Customers](assets/images/Top-5-Customers.png)
+5. Nurture Frequent Buyers with Lower Spend:
+Customers in Cluster 3 have higher recency and frequency but lower overall spend. These could be loyal, smaller-ticket shoppers. Try upselling or bundling promotions to gradually increase their average order value—these customers already engage often, so they’re easier to influence.
   
 ---
 
@@ -424,24 +415,24 @@ Based on the insights derived from the dashboards, the following recommendations
    ```bash
    git clone https://github.com/CHRISZOG10/public-store.git
    ```
-2. Open the Tableau Workbook: `assets/USA Stores Dashboards/US STORES DASHBOARD.twbx`  
+2. Open the Power BI Workbook: `assets/Public store Dashboard/Public Project Dashboard.pbix`  
 3. Explore both dashboards and try the interactivity features
 
 ---
 
 ## ✅ Project Outcome
 
-This project demonstrates real-world skills in:
+The project successfully delivered a complete end-to-end analytics solution simulating the sales performance and customer behavior for the retail company Public using the Online Retail II dataset from Kaggle.
 
-- End-to-end data pipeline creation  
-- Cleaning and preparing large retail datasets  
-- Advanced dashboard design in Tableau  
-- Delivering business insights through KPIs & trends  
-- Building interactive, user-driven visual experiences  
+### Key Achievements:
+📊 Cleaned & prepared over 500,000 rows of e-commerce data using Python (Pandas), ensuring accurate and usable information by removing duplicates, nulls, create tables, modify data types and much more.
+📦 Identified top-selling and most returned products, giving visibility into product performance across multiple countries.
+🌍 Uncovered geographical trends, including top-performing countries by revenue and transaction volume.
+📈 Delivered monthly sales trend analysis, helping the business visualize peak and low-performing periods.
+🧠 Applied RFM (Recency, Frequency, Monetary) analysis to segment customers into key groups (e.g., Champions, Loyal, At Risk), enabling future personalization strategies.
+📎 Exported clean datasets and segmentation files to integrate into Power BI for final dashboard designs
 
 ---
-
-
 
 ## 👨‍💻 Author
 
