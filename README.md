@@ -11,7 +11,8 @@ This project simulates a real-word sales analysis for **Public**, a major Greek 
 - [Tech Stack](#tech-stack)
 - [Data Preparation](#data-preparation)
   - [Data Source](#data-source)
-- [SQL Data Cleaning Process](#data-cleaning)
+- [RFM & K-MEANS analysis](#rfm-k-means-analysis)
+- [Python Data Cleaning Process](#data-cleaning)
 - [Sales Dashboard](#sales-dashboard)
 - [Customer Dashboard](#customer-dashboard)
 - [Interactivity & Filters](#interactivity--filters)
@@ -51,12 +52,15 @@ Simulate a real-world retail analytics scenario using historical sales data that
 
 ---
 
-## SQL Data Cleaning Process
+## Python Data Cleaning Process
 
 > **Cleaned and structured using Python in PyCharm.**  
 > ✅ Data import and explore the data with pandas library
 
 ```python
+import pandas as pd
+import re
+import datetime
 # DATA IMPORT FROM CSV 
 df = pd.read_csv(r"C:\Users\chris\OneDrive\Desktop\ΧΡΗΣΤΟΣ\PUBLIC PROJECT\data.csv\.vscode\DataCleaningPython\data.csv",encoding='windows-1252')
 print(df)
@@ -141,6 +145,65 @@ df_returns.to_csv('PublicProjectReturns.csv')
 ```
 
 ---
+
+## RFM & K-MEANS ANALYSIS
+
+> ✅ Create RFM table
+
+```python
+import pandas as pd
+import datetime
+import matplotlib.pyplot as plt
+import seaborn as sns
+#RFM
+reference_date = dt.datetime(2011, 12, 11)
+rfm = df_earnings.groupby('CustomerID').agg({'InvoiceDate': lambda x: (reference_date - x.max()).days,
+                                             'InvoiceNo': 'nunique',
+                                             'TotalPrice': 'sum'})
+rfm.columns = ['Recency', 'Frequency', 'Monetary']
+print(rfm.reset_index())
+```
+
+> ✅ Standarize the data and k-means clustering with elbow method
+
+```python
+from sklearn.preprocessing import StandardScaler
+from sklearn.cluster import KMeans
+#KMeans
+scaler = StandardScaler()
+rfm_scaled = scaler.fit_transform(rfm[['Recency', 'Frequency', 'Monetary']])
+print(rfm_scaled)
+
+inertias = []
+for i in range(1, 11):
+    kmeans = KMeans(n_clusters=i, random_state=42)
+    kmeans.fit(rfm_scaled)
+    inertias.append(kmeans.inertia_)
+print(inertias)
+print(rfm)
+
+plt.figure(figsize=(12, 6))
+plt.plot(range(1,11), inertias, 'o-')
+plt.xlabel('Number of Clusters')
+plt.ylabel('Inertia')
+plt.title('Elbow Method')
+plt.grid(True)
+plt.show()
+
+kmeans = KMeans(n_clusters=4, random_state=42)
+rfm['Cluster'] = kmeans.fit_predict(rfm_scaled)
+```
+
+
+
+
+
+
+
+
+
+
+
 
 ## 📈 Sales Dashboard
 
