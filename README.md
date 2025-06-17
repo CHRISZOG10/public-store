@@ -14,8 +14,7 @@ This project simulates a real-word sales analysis for **Public**, a major Greek 
 - [Python Data Cleaning Process](#data-cleaning)
 - [RFM & K-MEANS analysis](#rfm-k-means-analysis)
 - [Analyse the Data](#analyse-the-data)
-- [Sales Dashboard](#sales-dashboard)
-- [Customer Dashboard](#customer-dashboard)
+- [Sales & RFM Dashboard](#sales-rfm-dashboard)
 - [Interactivity & Filters](#interactivity--filters)
 - [Screenshots](#screenshots)
 - [Recommendations](#Recommendations)
@@ -231,7 +230,7 @@ rfm.to_csv("RFM.csv", index=False)
 --- The script results are: ---
 | Boxplot | Scatterplot by Clusters | Scatterlot by Customer ID |
 | ![Boxplot](assets/python_insights_images/RFM-BY-CLUSTER-BOXPLOT.png) | ![Scatterplot](assets/python_insights_images/RFM-BY-CLUSTER- SCATTERPLOT.png) | ![Colored Scatterplot](assets/python_insights_images/RFM-BY-CUSTOMERID-COLORED-SCATTERPLOT.png)
-##### From all the images you can explore how the k-means perform with 4 clusters
+##### From all the images you can explore how the k-means performs with 4 clusters!!!
 
 ## Analyze the data 
 
@@ -264,6 +263,7 @@ top_returns.head(10)
 | 10   | 47566B    | TEA TIME PARTY BUNTING              | 7           | 1424          | 3692.95       |
 ### INSIGHTS
 ##### As you can see the product with the most returns 80995 pieces is the "PAPER CRAFT , LITTLE BIRDIE" with value 168469.60 euros. So the company should check this product and see why it has so many returns!
+
 
 > ✅ Monthly Sales
 
@@ -314,6 +314,7 @@ plt.show()
 ### INSIGHTS 
 ##### The month with the highest sales is November 116817.38 euros and the second is December 1090906.68 euros. That means that in these months the public store has the highest sales and that means they have to increase the inventory. On the other hand, the months with the lowest sales are April 469200.36 euros and February 447137.35 euros. The company should create a strong marketing strategy for these months to increase the total sales to maximum.
 
+
 > ✅ Weekday sales
 
 ```python
@@ -343,6 +344,7 @@ plt.show()
 ### INSIGHTS
 ##### Looks like Thursday is the big winner when it comes to sales, bringing in around 1.98 million euros, with Tuesday not far behind at 1.7 million euros. These are clearly the busiest days for the public store, so it’s a good idea to keep shelves fully stocked and make sure there’s enough staff to handle the rush. On the flip side, Sunday stands out for the wrong reason — sales drop to about 792,000 euros, which is much lower than the rest of the week. To turn that around, it might help to run special Sunday-only deals, flash discounts, or promote weekend bundles to bring more people in. Even small events or giveaways could make Sundays more attractive for shoppers. By making the most of the strong days and giving a boost to the slower ones, the store can keep things balanced and grow total sales over time.
 
+
 ## 📈 Sales & RFM Dashboards
 
 The **Sales Dashboard** offers a deep dive into Public store Sales.
@@ -356,9 +358,8 @@ The **Sales Dashboard** offers a deep dive into Public store Sales.
 
 ---
 
-## 👥 RFM Dashboard
 
-Designed for marketing and strategy teams, this dashboard uncovers customer behavior patterns.
+The **RFM Dashboard** designed for marketing and strategy teams, this dashboard uncovers customer behavior patterns.
 
 ### Key Features
 
@@ -366,7 +367,7 @@ Designed for marketing and strategy teams, this dashboard uncovers customer beha
 - 📆 **Customer Table:** RFM & Clustering   
 - 📊 **RFM** Scatterplots  
 
-[View the Public Project Dashboard](assets/Public store Dashboard/Public Project Dashboard.pbix)
+### [To view the Public Project Dashboard follow this path](https://github.com/CHRISZOG10/public-store/blob/main/assets/Public%20store%20Dashboard/Public%20Project%20Dashboard.pbix)
 
 ---
 
