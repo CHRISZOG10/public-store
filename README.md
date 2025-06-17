@@ -11,8 +11,9 @@ This project simulates a real-word sales analysis for **Public**, a major Greek 
 - [Tech Stack](#tech-stack)
 - [Data Preparation](#data-preparation)
   - [Data Source](#data-source)
-- [RFM & K-MEANS analysis](#rfm-k-means-analysis)
 - [Python Data Cleaning Process](#data-cleaning)
+- [RFM & K-MEANS analysis](#rfm-k-means-analysis)
+- [Analyse the Data](#analyse-the-data)
 - [Sales Dashboard](#sales-dashboard)
 - [Customer Dashboard](#customer-dashboard)
 - [Interactivity & Filters](#interactivity--filters)
@@ -197,43 +198,175 @@ rfm['Cluster'] = kmeans.fit_predict(rfm_scaled)
 ![Elbow method](assets/python_insights_images/Elbow-method.png)
 ##### As you can see the image in 4 we have the elbow effect and this is the reason i choose the number 4 as the number of clusters
 
+> ✅ Boxplot & Scatterplots
 
+```python
+#Plots
+plt.figure(figsize=(10,4))
+for i, column in enumerate(['Recency', 'Frequency', 'Monetary']):
+    plt.subplot(1, 3, i+1)
+    sns.boxplot(x='Cluster', y=column, data=rfm)
+    plt.title(f'{column} by Cluster')
+plt.tight_layout()
+plt.show()
 
+rfm = rfm.reset_index()
+plt.figure(figsize=(12,6))
+for i, column in enumerate(['Recency', 'Frequency', 'Monetary']):
+    plt.subplot(1, 3, i+1)
+    sns.scatterplot(x= 'Cluster', y= column, data=rfm, hue='Cluster', palette='pastel')
+plt.tight_layout()
+plt.show()
 
+rfm = rfm.reset_index()
+plt.figure(figsize=(12,6))
+for i, column in enumerate(['Recency', 'Frequency', 'Monetary']):
+    plt.subplot(1, 3, i+1)
+    sns.scatterplot(x= 'CustomerID', y= column, data=rfm, hue='Cluster', palette='pastel')
+plt.tight_layout()
+plt.show()
+#Export the RFM table
+rfm.to_csv("RFM.csv", index=False)
+```
+--- The script results are: ---
+| Boxplot | Scatterplot by Clusters | Scatterlot by Customer ID |
+| ![Boxplot](assets/python_insights_images/RFM-BY-CLUSTER-BOXPLOT.png) | ![Scatterplot](assets/python_insights_images/RFM-BY-CLUSTER- SCATTERPLOT.png) | ![Colored Scatterplot](assets/python_insights_images/RFM-BY-CUSTOMERID-COLORED-SCATTERPLOT.png)
+##### From all the images you can explore how the k-means perform with 4 clusters
 
+## Analyze the data 
 
+> ✅ Top 10 items Returned
 
+```python
+df_returns.head()
+top_returns = ( 
+    df_returns.groupby(['StockCode', 'Description']).agg(ReturnCount = ('InvoiceNo', 'count'), 
+                                                                   TotalReturned = ('Quantity', lambda x: abs(x).sum()), 
+                                                                   ValueReturned = ('TotalPrice', lambda x: abs(x).sum())
+    )
+    .sort_values('TotalReturned', ascending = False)
+    .reset_index()
+)
+top_returns.head(10)
+```
+--- The Top 10 Returns are: ---
+| Rank | StockCode | Description                         | ReturnCount | TotalReturned | ValueReturned |
+|------|-----------|-------------------------------------|-------------|---------------|---------------|
+| 1    | 23843     | "PAPER CRAFT , LITTLE BIRDIE"       | 1           | 80995         | 168469.60     |
+| 2    | 23166     | MEDIUM CERAMIC TOP STORAGE JAR      | 10          | 74494         | 77479.64      |
+| 3    | 84347     | ROTATING SILVER ANGELS T-LIGHT HLDR | 3           | 9367          | 298.65        |
+| 4    | M         | Manual                              | 175         | 3995          | 112165.39     |
+| 5    | 21108     | FAIRY CAKE FLANNEL ASSORTED COLOUR  | 3           | 3150          | 6591.42       |
+| 6    | 85123A    | WHITE HANGING HEART T-LIGHT HOLDER  | 42          | 2578          | 6624.30       |
+| 7    | 21175     | GIN + TONIC DIET METAL SIGN         | 7           | 2030          | 3775.33       |
+| 8    | 22920     | HERB MARKER BASIL                   | 2           | 1527          | 841.05        |
+| 9    | 22273     | FELTCRAFT DOLL MOLLY                | 6           | 1447          | 3512.65       |
+| 10   | 47566B    | TEA TIME PARTY BUNTING              | 7           | 1424          | 3692.95       |
+### INSIGHTS
+##### As you can see the product with the most returns 80995 pieces is the "PAPER CRAFT , LITTLE BIRDIE" with value 168469.60 euros. So the company should check this product and see why it has so many returns!
 
+> ✅ Monthly Sales
 
+```python
+#SALES BY MONTH
+##CREATE MONTH, YEAR COLUMNS
+df_earnings.head()
+df['InvoiceDate'].info()
+df_earnings_copy = df_earnings.copy()
+df_earnings_copy.head()
+df_earnings_copy['Month'] = df_earnings_copy['InvoiceDate'].dt.month
+df_earnings_copy['Year'] = df_earnings_copy['InvoiceDate'].dt.year
+df_earnings_copy.head()
+##CHECK IF WE HAVE THE WRIGHT COLUMNS 
+df_earnings_copy[df_earnings_copy['Month'].isin([9, 10])]
+df_earnings_copy['Month'].value_counts()
+df_earnings_copy['Year'].value_counts()
+##CREATE COLUMN MONTHNAME WITH THE NAME OF MONTH
+df_earnings_copy['MonthName'] = df_earnings_copy['InvoiceDate'].apply(lambda x: x.strftime('%B'))
+df_earnings_copy.head()
+df_earnings_copy['MonthName'].value_counts()
+##CREATE TABLE SALES BY MONTH
+monthly_sales = ( 
+    df_earnings_copy.groupby('MonthName')['TotalPrice'].sum().reset_index()
 
+)
+##SORT MONTHLY SALES
+monthly_sales_sorted = monthly_sales.sort_values('TotalPrice', ascending=False).reset_index()
+del monthly_sales_sorted['index']
+monthly_sales_sorted
+##CREATE A BAR CHART
+import matplotlib.pyplot as plt
+plt.style.available
+plt.style.use('ggplot')
+plt.figure(figsize=(12,6))
+plt.bar(monthly_sales_sorted['MonthName'], monthly_sales_sorted['TotalPrice'].round(2), color='Skyblue')
+plt.title('SALES BY MONTH')
+plt.xlabel('MONTH')
+plt.ylabel('SALES')
+plt.xticks(monthly_sales_sorted['MonthName'], rotation=45)
+for i, value in enumerate(monthly_sales_sorted['TotalPrice'].round(2)):
+    plt.text(monthly_sales_sorted['MonthName'][i], value, str(value), ha='center', va='bottom')
+plt.tight_layout()
+plt.show()
+```
+--- Ranking months by total sales ---
+![Month Sales](assets/python_insights_images/Months-sales.png)
+### INSIGHTS 
+##### The month with the highest sales is November 116817.38 euros and the second is December 1090906.68 euros. That means that in these months the public store has the highest sales and that means they have to increase the inventory. On the other hand, the months with the lowest sales are April 469200.36 euros and February 447137.35 euros. The company should create a strong marketing strategy for these months to increase the total sales to maximum.
 
-## 📈 Sales Dashboard
+> ✅ Weekday sales
 
-The **Sales Dashboard** offers a deep dive into business performance across time, products, and regions.
+```python
+#WEAKDAY SALES
+##CREATE TABLE WEEKDAY SALES
+df_earnings_copy['Weekday'] = df_earnings_copy['InvoiceDate'].dt.day_name()
+df_earnings_copy
+weekday_sales = df_earnings_copy.groupby('Weekday')['TotalPrice'].sum().reset_index()
+weekday_sales_sorted = weekday_sales.sort_values('TotalPrice', ascending=False).reset_index()
+del weekday_sales_sorted['index']
+weekday_sales_sorted
+##CREATE A BAR CHART
+plt.style.use('ggplot')
+plt.figure(figsize=(12,6))
+plt.bar(weekday_sales_sorted['Weekday'], weekday_sales_sorted['TotalPrice'].round(2), color='Skyblue')
+plt.title('SALES BY WEEKDAY')
+plt.xlabel('DAY')
+plt.ylabel('SALES')
+plt.xticks(weekday_sales_sorted['Weekday'], rotation=45)
+for i, value in enumerate(weekday_sales_sorted['TotalPrice'].round(2)):
+    plt.text(weekday_sales_sorted['Weekday'][i], value, str(value), ha='center', va='bottom')
+plt.tight_layout()
+plt.show()
+```
+--- Ranking Weekdays by total sales ---
+![Weekday Sales](assets/python_insights_images/Weekday-sales.png)
+### INSIGHTS
+##### Looks like Thursday is the big winner when it comes to sales, bringing in around 1.98 million euros, with Tuesday not far behind at 1.7 million euros. These are clearly the busiest days for the public store, so it’s a good idea to keep shelves fully stocked and make sure there’s enough staff to handle the rush. On the flip side, Sunday stands out for the wrong reason — sales drop to about 792,000 euros, which is much lower than the rest of the week. To turn that around, it might help to run special Sunday-only deals, flash discounts, or promote weekend bundles to bring more people in. Even small events or giveaways could make Sundays more attractive for shoppers. By making the most of the strong days and giving a boost to the slower ones, the store can keep things balanced and grow total sales over time.
+
+## 📈 Sales & RFM Dashboards
+
+The **Sales Dashboard** offers a deep dive into Public store Sales.
 
 ### Key Features
 
-- 📅 **KPI Overview:** Total Sales, Profit, Quantity (Current & Previous Year)  
-- 📉 **Sales Trends:** Monthly comparison with highlights of best/worst months  
-- 🧾 **Category Comparison:** Sales vs. Profit per Category  
-- 📆 **Weekly Trends:** Weekly analysis with average line & variance indicators  
-
-[View the USA SALES DASHBOARD](https://public.tableau.com/app/profile/chris.zogas/viz/USSTORESDASHBOARD/USASALESDASHBOARD)
+- 📅 **KPI Overview:** Revenue, Total Products, Total Orders, Total Customers, Products Sold, Products Returned  
+- 📉 **Table** All the products insights   
+- 📆 **Year Comparison:** Revenue & Orders 2011 vs 2010  
+- 🏙️ **Country Comparison** Weekly analysis with average line & variance indicators  
 
 ---
 
-## 👥 Customer Dashboard
+## 👥 RFM Dashboard
 
 Designed for marketing and strategy teams, this dashboard uncovers customer behavior patterns.
 
 ### Key Features
 
-- 🔢 **KPI Overview:** Customers, Orders, Sales per Customer  
-- 📆 **Customer Trends:** Monthly KPI breakdown  
-- 📊 **Order Distribution:** Loyalty & engagement insights  
-- 🥇 **Top 10 Customers by Profit:** Ranked by profit, with details  
+- 🔢 **KPI Overview:** Average of Recency, Average of Frequency, Average of Monetary
+- 📆 **Customer Table:** RFM & Clustering   
+- 📊 **RFM** Scatterplots  
 
-[View the USA CUSTOMERS DASHBOARD](https://public.tableau.com/app/profile/chris.zogas/viz/USSTORESCUSTOMERSDASHBOARD/USACUSTOMERSDASHBOARD?publish=yes)
+[View the Public Project Dashboard](assets/Public store Dashboard/Public Project Dashboard.pbix)
 
 ---
 
