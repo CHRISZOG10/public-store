@@ -26,21 +26,20 @@ This project simulates a real-word sales analysis for **Public**, a major Greek 
 ## 🔍 Project Overview
 
 **Objective:**  
-Provide a business-ready, interactive dashboard that analyzes year-over-year stores sales and customer behavior trends across the USA. This includes:
+Simulate a real-world retail analytics scenario using historical sales data that reflects actual transactions from Public, and deliver a business-ready dashboard focused on deriving actionable insights that support product performance monitoring and customer segmentation. This includes:
 
-- 📊 Yearly & Monthly Sales Trends  
-- 💰 Profit Analysis & KPIs  
-- 🛒 Product Subcategory Performance  
-- 🧑‍🤝‍🧑 Customer Loyalty & Engagement  
-- 📍 Regional & State-Based Filters  
+- 📊 Understand and clean the sales data
+- 💰 Identify key trends in product performance and customer behavior
+- 🛒 Segment the customer base using RFM analysis  
+- 🧑‍🤝‍🧑 Design a compelling Power BI dashboard to communicate business insights
+- 📍 Customer ID & Country Filters  
 
 ---
 
 ## 🛠 Tech Stack
-
-- **Microsoft Excel** – Initial data exploration  
-- **SQL (VS Code)** – Data cleaning & transformation  
-- **Tableau** – Interactive visual dashboards  
+ 
+- **Python (via PyCharm)** – Data cleaning & analyze the trends  
+- **Power BI** – Interactive visual dashboards  
 - **GitHub** – Version control & collaboration  
 
 ---
@@ -48,225 +47,99 @@ Provide a business-ready, interactive dashboard that analyzes year-over-year sto
 ## 🧹 Data Preparation
 
 ### 📁 Data Source
-[View the data Retail Store Sales: Dirty for Data Cleaning](https://www.kaggle.com/datasets/ahmedmohamed2003/retail-store-sales-dirty-for-data-cleaning)
-
-The raw dataset was downloaded from Kaggle and enriched with U.S.A geographical data:
-
-- `country` ➝ All rows labeled as `"USA"`  
-- `state` ➝ U.S.A. states generated and mapped  
-- `region` ➝ Categorized into `East`, `West`, `North`, `South`  
+[View the data UCI Online Retail II Data Set](https://www.kaggle.com/datasets/jillwang87/online-retail-ii)
 
 ---
 
 ## SQL Data Cleaning Process
 
-> **Cleaned and structured using SQL in VS Code.**  
-> ✅ Create Database and Import the Data in MySql manual
-> ✅ Connect VS Code with MySql
-> ✅ See the data and duplicate the table us_stores
+> **Cleaned and structured using Python in PyCharm.**  
+> ✅ Data import and explore the data with pandas library
 
-```sql
-/*
-SELECT
-    *
-FROM us_stores;
-
-CREATE TABLE us_stores_clean like us_stores;
-
-SELECT
-    *
-FROM us_stores_clean;
-
-INSERT into us_stores_clean 
-select * from us_stores;
-*/
+```python
+# DATA IMPORT FROM CSV 
+df = pd.read_csv(r"C:\Users\chris\OneDrive\Desktop\ΧΡΗΣΤΟΣ\PUBLIC PROJECT\data.csv\.vscode\DataCleaningPython\data.csv",encoding='windows-1252')
+print(df)
+#FIRST 5 ROWS
+print(f'{df.head()}\n')
+#SHAPE
+print(f'{df.shape}\n')
+#COLUMN TYPES
+print(f'{df.info()}\n')
+#COLUMN NAMES
+print(f'{df.columns}\n') 
+#STATISTICAL INFO
+print(f'{df.describe()}\n')
 ```
 
-> ✅ Rename the columns
+> ✅ Drop na's and modify the incoicedate column type
 
-```sql
-/*
-SELECT * from us_stores_clean;
+```python
+#DATA CLEANING
+##HOW MANY NULLS IN COLUMNS AND DROP THEM
+df.isna().sum()
+df[['Description', 'CustomerID']]
+df.dropna(subset=['Description'], inplace=True)
+df.dropna(subset=['CustomerID'], inplace=True)
 
-ALTER TABLE us_stores_clean
-RENAME COLUMN `Transaction ID` to TransactionID;
-
-ALTER TABLE us_stores_clean
-RENAME COLUMN `Customer ID` to CustomerID;
-
-ALTER TABLE us_stores_clean
-RENAME COLUMN `Price Per Unit` to UnitPrice;
-
-ALTER TABLE us_stores_clean
-RENAME COLUMN `Total Spent` to TotalSpent;
-
-ALTER TABLE us_stores_clean
-RENAME COLUMN `Payment Method` to PaymentMethod;
-
-ALTER TABLE us_stores_clean
-RENAME COLUMN `Transaction Date` to TransactionDate;
-
-ALTER TABLE us_stores_clean
-RENAME COLUMN `Discount Applied` to DiscountApplied;
-*/
+##MODIFY COLUMN INVOICEDATE DATA TYPE
+df['InvoiceDate'].info()
+df['InvoiceDate'] = pd.to_datetime(df['InvoiceDate'])
 ```
 
-> ✅ Remove Duplicates
+> ✅ Create two tables for earnings and returns and create a column TotalPrice for all the tables
 
-```sql
-/*
-SELECT
-    *
-from (    
-    SELECT
-        *,
-        ROW_NUMBER() over(PARTITION BY TransactionID, 
-                                        CustomerID, 
-                                        Category, 
-                                        Item, 
-                                        UnitPrice,
-                                        Quantity, 
-                                        TotalSpent, 
-                                        PaymentMethod, 
-                                        `Location`, 
-                                        TransactionDate, 
-                                        DiscountApplied, 
-                                        Profit) as duplicated
-    FROM us_stores_clean
-) d
-where duplicated > 1;
+```python
+##CREATE 2 TABLES ONE FOR EARNINGS AND ONE FOR RETURNS
+df_earnings = df[df['Quantity'] > 0]
+df_returns = df[df['Quantity'] < 0]
+df_earnings.head()
+df_returns.head()
 
---THERE IS NOT DUPLICATED ROWS
-*/
+##CREATE NEW COLUMN TOTAL PRICE FOR BOTH TABLES
+df_earnings['TotalPrice'] = df_earnings['Quantity'] * df_earnings['UnitPrice']
+df_returns['TotalPrice'] = df_returns['Quantity'] * df_returns['UnitPrice']
+df['TotalPrice'] = df['Quantity'] * df['UnitPrice']
+df_earnings.head()
+df_returns.head()
+df.head()
 ```
 
-> ✅ Explore the columns and normalize the data
+> ✅ Normalize the data
 
-```sql
-/*
-DESCRIBE us_stores_clean;
-
-SELECT
-    Distinct TransactionID
-FROM us_stores_clean
-order by TransactionID;
----WE DONT HAVE PROBLEM WITH THE TRANSACTIONID COLUMN
-
-SELECT
-    DISTINCT CustomerID 
-FROM us_stores_clean;
----WE DONT HAVE PROBLOEM WITH THE CUSTOMERID COLUMN
-
-SELECT
-    DISTINCT Category
-from us_stores_clean
-ORDER BY Category;
----WE DONT HAVE PROBLEM WITH THE CATEGORY COLUMN
-
-SELECT
-    DISTINCT Item
-FROM us_stores_clean
-where Item = ''
-ORDER BY Item DESC;
-
-DELETE FROM us_stores_clean
-where Item = '' or Item is null
----THE ITEM COLUMN FIXED
-
-SELECT
-    DISTINCT UnitPrice
-FROM us_stores_clean
-ORDER BY UnitPrice;
----WE DONT HAVE PROBLEM WITH THE UNITPRICE COLUMN
-
-SELECT
-    DISTINCT Quantity
-FROM us_stores_clean
-ORDER BY Quantity;
-
-ALTER TABLE us_stores_clean
-Modify COLUMN Quantity int;
----COLUMN QUANTITY FIXED
-
-SELECT
-    DISTINCT TotalSpent
-from us_stores_clean
-order BY TotalSpent DESC;
-
-ALTER TABLE us_stores_clean
-Modify COLUMN TotalSpent double;
----COLUMN TOTALSPENT FIXED
-
-SELECT
-    DISTINCT PaymentMethod
-from us_stores_clean
-ORDER BY PaymentMethod;
----WE DONT HAVE PROBLEM WITH THE PAYMENTMETHOD COLUMN
-
-SELECT
-    DISTINCT `Location`
-FROM us_stores_clean
-ORDER BY `Location`;
----WE DONT HAVE PROBLEM WITH THE LOCATION COLUMN
-
-SELECT
-    DISTINCT TransactionDate, str_to_date(TransactionDate, '%m/%d/%Y')
-FROM us_stores_clean
-ORDER BY TransactionDate;
-
-UPDATE us_stores_clean
-set TransactionDate = str_to_date(TransactionDate, '%m/%d/%Y');
-
-ALTER TABLE us_stores_clean
-Modify COLUMN TransactionDate date;
----COLUMN TRANSACTIONDATE FIXED
-
-SELECT
-    DISTINCT DiscountApplied,
-    Count(*)
-FROM us_stores_clean
-where DiscountApplied is null or DiscountApplied in ('', ' ')
-GROUP BY DiscountApplied
-ORDER BY DiscountApplied;
-
-DELETE FROM us_stores_clean
-where DiscountApplied = '';
----COLUMN DISCOUNTAPPLIED FIXED
-
-SELECT
-    DISTINCT Profit
-FROM us_stores_clean
-ORDER BY Profit;
----WE DONT HAVE PROBLEM WITH THE PROFIT COLUMN
-
-SELECT
-    DISTINCT Country 
-FROM us_stores_clean
-UNION ALL
-SELECT
-    DISTINCT `State`
-from us_stores_clean
-union ALL
-select
-    DISTINCT Region
-FROM us_stores_clean;
----WE DONT HAVE PROBLEM WITH THE COUNTRY, STATE, REGION COLUMNS
-*/
+```python
+##NORMALIZE THE DATA IN COLUMNS 
+df['Description'].apply(lambda x: re.sub(r'[!@#$%^&.,]', '', str(x)))
+df['Description']
+df_earnings['Description'].apply(lambda x: re.sub(r'[!@#$%^&.,]', '', str(x)))
+df_earnings['Description']
+df_returns['Description'].apply(lambda x: re.sub(r'[!@#$%^&.,]', '', str(x)))
+df_returns['Description']
 ```
 
-> ✅ See the cleaned data
+> ✅ Drop duplicates
 
-```sql
-/*
-DESCRIBE us_stores_clean;
-SELECT
-    *
-FROM us_stores_clean;
+```python
+df.duplicated().value_counts()
 
-SELECT
-    count(*)
-from us_stores_clean;
+##Remove Duplicates
+df.drop_duplicates(subset=['InvoiceNo', 'StockCode', 'Description', 'Quantity', 'InvoiceDate','UnitPrice', 'CustomerID', 'Country'], inplace=True, ignore_index=True)
+df_earnings.drop_duplicates(subset=['InvoiceNo', 'StockCode', 'Description', 'Quantity', 'InvoiceDate','UnitPrice', 'CustomerID', 'Country'], inplace=True, ignore_index=True)
+df_returns.drop_duplicates(subset=['InvoiceNo', 'StockCode', 'Description', 'Quantity', 'InvoiceDate','UnitPrice', 'CustomerID', 'Country'], inplace=True, ignore_index=True)
+df.info()
+df_earnings.info()
+df_returns.info()
 ```
+
+> ✅ Export the data
+
+```python
+#EXPORT THE DATA 
+df.to_csv('PublicProjectCleaned.csv')
+df_earnings.to_csv('PublicProjectSales.csv')
+df_returns.to_csv('PublicProjectReturns.csv')
+```
+
 ---
 
 ## 📈 Sales Dashboard
